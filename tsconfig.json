@@ -1,0 +1,9 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "sourceMap": true,
+        "outDir": "./out",
+        "sourceRoot": "./lib",
+        "moduleResolution": "node"
+    }
+}

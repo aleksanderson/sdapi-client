@@ -19,11 +19,11 @@ export default class DSDebugger {
    */
 
   createSession(): Promise<IDSAPIResponse> {
-    return this._request.make({ url: '/client', method: 'POST'});
+    return this._request.make({ url: '/client', method: 'POST' });
   }
 
   removeSession(): Promise<IDSAPIResponse> {
-    return this._request.make({ url: '/client', method: 'DELETE'});
+    return this._request.make({ url: '/client', method: 'DELETE' });
   }
 
   /**
@@ -37,7 +37,7 @@ export default class DSDebugger {
     });
   }
 
-  setBreakPoint(breakpoints: Array<IBreakpoint>): Promise<IDSAPIResponse> {
+  setBreakPoints(breakpoints: Array<IBreakpoint>): Promise<IDSAPIResponse> {
     return this._request.make({ 
       url: '/breakpoints', 
       method: 'POST', 

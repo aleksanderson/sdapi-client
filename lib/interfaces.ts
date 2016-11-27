@@ -1,7 +1,9 @@
 //TODO: finish the interface for the generic API response
+
 export interface IDSAPIResponse {
-  type: 'OK' | 'ERR'
+  errorType?: string,
   errorMessage?: string,
+  //????????
   data?: IBreakpoint | Array<IBreakpoint> 
 }
 

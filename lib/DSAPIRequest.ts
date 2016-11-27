@@ -5,21 +5,7 @@ import {
   IDSAPIResponse
 } from './interfaces';
 
-// if(process.env.DEV_MODE) {
-//   const requestDebug = require('request-debug'),
-//         colors       = require('colors');
-  
-//   let counter = 0;
-  
-//   requestDebug(request, (type, data, r) => {
-//     console.log(`[${++counter}] ${type} ----------------------------------------`.red);
-//     console.log(data);
-//     console.log('------------------------------------------------------'.red);
-//   });
-// }
-
 require('request-debug')(request);
-
 
 /**
  * HTTP methods which DSAPI supports
@@ -42,17 +28,9 @@ export default class DSAPIRequest {
     });
   }
 
-  private buildRequestURL(segment: string): string {
+  private buildRequestURL(endpoint: string): string {
     //TODO: fix when resolve URL to avoid concatenations sideeffects like '//'
-    return this._connectionOptions.host + segment;
-  }
-
-  private parseResponse(unformatedResponse: string): IDSAPIResponse {
-    let response: IDSAPIResponse = null;
-    
-    //TODO: implement formated response
-
-    return response;
+    return `https://${this._connectionOptions.host}/s/-/dw/debugger/v1_0/${endpoint}`;
   }
 
   make(requestOptions: IDSAPIRequest): Promise<IDSAPIResponse> {
@@ -71,9 +49,16 @@ export default class DSAPIRequest {
       this._request(opts, (err, message, body) => {
         if(err) {
           return reject(err);
+        } else if(![200, 201, 204].find(e => e == message.statusCode)) {
+          return reject(JSON.parse(message.body))
+        } else {
+          try {
+            return resolve(JSON.parse(message.body));
+          } catch(err) {
+            return resolve({});
+          }
         }
-        return resolve(message.toJSON());
-      })
+      });
     }); 
   }
 }

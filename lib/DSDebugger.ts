@@ -1,9 +1,9 @@
-  //TODO: think about using DSDubugger class as an EventEmitter
-  //for example createSession(listen: boolean)
-  // in this case to do something like
-  // dsDebugger.on('debug.breakpoint.hit', () => { })
-  // dsDebugger.on('debug.session.terminated', () => { })
-  // dsDebugger.on('debug.session.terminated', () => { })
+//TODO: think about using DSDubugger class as an EventEmitter
+//for example createSession(listen: boolean)
+// in this case to do something like
+// dsDebugger.on('debug.breakpoint.hit', () => { })
+// dsDebugger.on('debug.session.terminated', () => { })
+// dsDebugger.on('debug.session.terminated', () => { })
 
 import {
   IConnectionOptions,
@@ -14,10 +14,16 @@ import {
 import DSAPIRequest from './DSAPIRequest';
 import DSThread from './DSThread';
 
-//TODO: fix to be import { EventEmitter } from 'events' 
+//TODO: fix to be import { EventEmitter } from 'events'/// 
 import events = require('events');
 const EventEmitter = events.EventEmitter;
+//////////////////////////////////////////////////////////
 
+/**
+ * Remove check for certificates validity in cases when workign with ssandboxes
+ * which have broken ceritifates
+ */
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
 
 export default class DSDebugger extends EventEmitter {
   

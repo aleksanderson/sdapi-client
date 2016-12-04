@@ -1,20 +1,8 @@
 import DSDebugger from './DSDebugger';
 
-
-//TODO: move this into DSDebugger
-/**
- * Remove check for certificates validity in cases when workign with ssandboxes
- * which have broken ceritifates
- */
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
-
-/**
- * Create a debugger session
- */
-
 let dsDebugger = new DSDebugger(require('../dw.config.json'), { listen: true, interval: 1000 });
 
-dsDebugger.on('debug.breakpoints.hit', () => {
+dsDebugger.on('debug.breakpoints.hit', (thread) => {
   console.log('HIT BREAKPOINT');
 })
 

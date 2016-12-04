@@ -1,25 +1,30 @@
-//TODO: Implement DSAPIRequest as singleton in order to be shared by both DSDebugger/DSThread
-
-
 import * as request from 'request'; //TODO: figure out why 'import request from "request"' does not work
 import {
   IConnectionOptions,
-  IDSAPIRequest,
-  IDSAPIResponse
+  IDSAPIRequest
 } from './interfaces';
 
 require('request-debug')(request);
 
-/**
- * HTTP methods which DSAPI supports
- */
+
 export default class DSAPIRequest {
   
-  private _connectionOptions: IConnectionOptions;
-  
-  private _request: any;   //TODO: find out a correct type for Request
+  private static _instance: DSAPIRequest;
+  public static getInstance(options?: IConnectionOptions): DSAPIRequest {
+    if(!this._instance) {
+      this._instance = new DSAPIRequest(options);
+    }
+    return this._instance;
+  }
 
+  private _connectionOptions: IConnectionOptions;  
+  private _request: any;   //TODO: find out a correct type for Request
+  
   constructor(options: IConnectionOptions) {
+    if(DSAPIRequest._instance) {
+      throw new Error('Error when creating an instance. Use "getInstance()" method to obtain it');
+    }
+
     this._connectionOptions = options;
     this._request = request.defaults({
       headers: {

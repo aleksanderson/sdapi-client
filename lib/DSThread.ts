@@ -1,34 +1,26 @@
-//FYI: WORK IN PROGRESS
-
 import { 
   IDSThread,
-  IDSAPIResponse
+  IEvaluateResult,
+  IObjectMembers
 } from './interfaces';
 import DSAPIRequest from './DSAPIRequest';
 
-export default class DSThread implements IDSThread {
+export default class DSThread {
 
+  private readonly REFRESH_THREAD_INTERVAL: number = 55 * 1000;
   private _request: DSAPIRequest;
+  private _thread: IDSThread;
 
+  constructor(thread: IDSThread) {
+    this._request = DSAPIRequest.getInstance();
+    this._thread = thread;
 
-  constructor() {
-
-    //TEMPORAL
-
-    this._request = new DSAPIRequest({
-  "host": "",
-  "user": "",
-  "password": "",
-  "version": ""
-});
-
-    //TEMPORAL
-
+    this.refreshThreatTimeout();
   }
 
-  evaluate(thread: number, frame: number, expression: string): Promise<IDSAPIResponse> {
+  evaluate(frame: number, expression: string): Promise<IEvaluateResult> {
     return this._request.make({
-      url: `/threads/${thread}/frames/${frame}/eval`,
+      url: `/threads/${this._thread.id}/frames/${frame}/eval`,
       method: 'GET',
       qs: {
         expr: expression
@@ -36,9 +28,9 @@ export default class DSThread implements IDSThread {
     });
   }
 
-  getObjects(thread: number, frame: number, count?: number, path?: string, start?:number): Promise<IDSAPIResponse> {
+  getObjectMembers(frame: number, count?: number, path?: string, start?:number): Promise<IObjectMembers> {
     return this._request.make({
-      url: `/threads/${thread}/frames/${frame}/members`,
+      url: `/threads/${this._thread.id}/frames/${frame}/members`,
       method: 'GET',
       qs: {
         object_path: path,
@@ -48,33 +40,37 @@ export default class DSThread implements IDSThread {
     })
   }
 
-  //TODO: think about having a collection of threats in the current class as a property
-  //...
-  //private threads: Array<Threat> = []
-  //
-  // and calling all methods related to that on that Threat objects
-  //...
-  // debugger.activeThread.getObjects(count, path, start)
-  // debugger.activeThread.stepInto()
-  // debugger.activeThread.stepOver()
-  //...  
-  stepInto(thread: number): Promise<IDSAPIResponse> {
-    return this._request.make({ url: '/threads/${thread}/into', method: 'POST' });
+  stepInto(): Promise<void> {
+    return this._request.make({ url: '/threads/${this._thread.id}/into', method: 'POST' });
   }
- 
-  stepOut(thread: number): Promise<IDSAPIResponse> {
-    return this._request.make({ url: '/threads/${thread}/out', method: 'POST' });
+  
+  stepOut(): Promise<void> {
+    return this._request.make({ url: '/threads/${this._thread.id}/out', method: 'POST' });
   }
 
-  stepOver(thread: number): Promise<IDSAPIResponse> {
-    return this._request.make({ url: '/threads/${thread}/over', method: 'POST' });
+  stepOver(): Promise<void> {
+    return this._request.make({ url: '/threads/${this._thread.id}/over', method: 'POST' });
   }
 
-  resume(thread: number): Promise<IDSAPIResponse> {
-    return this._request.make({ url: '/threads/${thread}/resume', method: 'POST' });
+  resume(): Promise<void> {
+    return this._request.make({ url: '/threads/${this._thread.id}/resume', method: 'POST' });
   }
 
-  stop(thread: number): Promise<IDSAPIResponse> {
-    return this._request.make({ url: '/threads/${thread}/stop', method: 'POST' });
+  stop(): Promise<void> {
+    return this._request.make({ url: '/threads/${this._thread.id}/stop', method: 'POST' });
   }  
+
+  /**
+   * Private methods
+   */
+
+  private refreshThreatTimeout(): void {
+    let tick = () => {
+      setTimeout(() => {
+        this._request.make({ url: '/threads/reset', method: 'POST' })
+          .then(() => tick());
+      }, this.REFRESH_THREAD_INTERVAL);
+    };
+    tick();
+  }
 }

@@ -1,11 +1,3 @@
-//TODO: remove generic response type is it's not needed
-export interface IDSAPIResponse {
-  errorType?: string,
-  errorMessage?: string,
-  //????????
-  data?: IBreakpoint | Array<IBreakpoint> 
-}
-
 export interface IDSAPIRequest {
   url: string,
   method: 'GET' | 'POST' | 'HEAD' | 'DELETE', 
@@ -20,26 +12,30 @@ export interface IConnectionOptions {
   version: string
 }
 
+export interface IDSDebugConfiguration {
+  listen: boolean,
+  interval: number
+}
+
 export interface IBreakpoint {
   id?: string,
   line_number: number,
   script_path: string
 }
 
-export interface ITrhead {
-  //TODO: implement
-}
-
-export interface IDSDebugger {
-  //TODO: implement
-}
-
 export interface IDSThread {
-  //TODOL implement
+  id?: string,
+  status: string, //halted, active
+  call_stack: Object[]
 }
 
-export interface IDSDebugConfiguration {
-  listen: boolean,
-  interval: number
+export interface IEvaluateResult {
+  expression: string,
+  result: any
 }
+
+export interface IObjectMembers {
+  object_members: Object[]
+}
+
 

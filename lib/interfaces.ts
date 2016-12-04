@@ -1,5 +1,4 @@
-//TODO: finish the interface for the generic API response
-
+//TODO: remove generic response type is it's not needed
 export interface IDSAPIResponse {
   errorType?: string,
   errorMessage?: string,
@@ -27,5 +26,20 @@ export interface IBreakpoint {
   script_path: string
 }
 
+export interface ITrhead {
+  //TODO: implement
+}
 
+export interface IDSDebugger {
+  //TODO: implement
+}
+
+export interface IDSThread {
+  //TODOL implement
+}
+
+export interface IDSDebugConfiguration {
+  listen: boolean,
+  interval: number
+}
 

@@ -1,3 +1,6 @@
+//TODO: Implement DSAPIRequest as singleton in order to be shared by both DSDebugger/DSThread
+
+
 import * as request from 'request'; //TODO: figure out why 'import request from "request"' does not work
 import {
   IConnectionOptions,
@@ -33,7 +36,8 @@ export default class DSAPIRequest {
     return `https://${this._connectionOptions.host}/s/-/dw/debugger/v1_0/${endpoint}`;
   }
 
-  make(requestOptions: IDSAPIRequest): Promise<IDSAPIResponse> {
+  //TODO: think of providing more defined type than "any"
+  make(requestOptions: IDSAPIRequest): Promise<any> {
     return new Promise((resolve, reject) => {
 
       let opts = Object.assign(requestOptions, 

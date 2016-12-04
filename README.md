@@ -1,6 +1,7 @@
 # sdapi-client
 
-Promised based client for Salesforce Commerce Cloud Debugger API
+Client for Salesforce Commerce Cloud Debugger API which abstracts away a
+RESTful nature of the API and provides promised based way to interact with it
 
 ## Configuration
 
